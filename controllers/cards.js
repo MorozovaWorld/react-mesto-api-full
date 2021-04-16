@@ -23,11 +23,18 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .orFail(() => {
       throw new Error('NotFound');
     })
-    .then((card) => res.status(200).send(card))
+    .then((card) => {
+      if (card.owner._id === req.user._id) {
+        res.status(403).send({ message: 'Нет прав доступа к удалению карточки' });
+      }
+
+      card.remove();
+      res.status(200).send(card);
+    })
     .catch((err) => handleIdErrors(err, res));
 };
 
