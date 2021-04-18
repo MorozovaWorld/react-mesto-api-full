@@ -1,4 +1,4 @@
-// user validation
+// users validation
 const { celebrate, Joi } = require('celebrate');
 
 const createUserValidator = celebrate({
@@ -62,6 +62,7 @@ const updateProfileAvatarValidator = celebrate({
   }),
 });
 
+// cards validation
 const createCardValidator = celebrate({
   body: Joi.object().keys({
     name: Joi

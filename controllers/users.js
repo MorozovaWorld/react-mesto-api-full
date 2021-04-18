@@ -4,26 +4,55 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+const Err400BadRequest = require('../errors/Err400BadRequest');
+const Err401Unauthorized = require('../errors/Err401Unauthorized');
+// const Err403Forbidden = require('../errors/Err403Forbidden');
+const Err404NotFound = require('../errors/Err404NotFound');
+const Err409Conflict = require('../errors/Err409Conflict');
+const Err500 = require('../errors/Err500');
+
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SALT_ROUNDS = 10;
 
-const handleUpdateErrors = (err, res) => {
+const handleGetUserErrors = (err, res, next) => {
+  if (err.message === 'Not Found') {
+    const notFoundError = new Err404NotFound('Пользователь не найден');
+    next(notFoundError);
+  }
+  if (err.name === 'CastError') {
+    const badIdError = new Err400BadRequest('Некорректный id');
+    next(badIdError);
+  } else {
+    const OtherError = new Err500('Внутренняя ошибка сервера');
+    next(OtherError);
+  }
+};
+
+const handleUpdateErrors = (err, res, next) => {
   if (err.name === 'ValidationError') {
-    res.status(400).send({ message: `Произошла ошибка валидации: ${err}` });
-  } else if (err.name === 'CastError') {
-    res.status(400).send({ message: 'Невалидный id' });
-  } else if (err.message === 'NotFound') {
-    res.status(404).send({ message: 'Пользователь не найден' });
-  } else res.status(500).send({ message: 'Не удалось обновить информацию пользователя: внутренняя ошибка сервера' });
+    const validationError = new Err400BadRequest(`Произошла ошибка валидации: ${err}`);
+    next(validationError);
+  }
+  if (err.name === 'CastError') {
+    const badIdError = new Err400BadRequest('Невалидный id');
+    next(badIdError);
+  }
+  if (err.message === 'Not Found') {
+    const notFoundError = new Err404NotFound('Пользователь не найден');
+    next(notFoundError);
+  } else {
+    const OtherError = new Err500('Не удалось обновить информацию пользователя: внутренняя ошибка сервера');
+    next(OtherError);
+  }
 };
 
 const emailAndPasswordValidation = (res, email, password) => {
   if (!email || !password) {
-    res.status(400).send({ message: 'Не передан емейл или пароль' });
+    throw new Err400BadRequest('Не передан емейл или пароль');
   }
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name,
     about,
@@ -45,13 +74,16 @@ const createUser = (req, res) => {
     .then((user) => res.status(201).send(user))
     .catch((err) => {
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        res.status(409).send({ message: 'Пользователь с таким емейлом уже зарегистрирован' });
+        const ConflictError = new Err409Conflict('Пользователь с таким емейлом уже зарегистрирован');
+        next(ConflictError);
+      } else {
+        const OtherErr = new Err500('Не удалось зарегистрировать полязователя, внутренняя ошибка сервера');
+        next(OtherErr);
       }
-      handleUpdateErrors(err, res);
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   emailAndPasswordValidation(res, req.body.email, req.body.password);
 
   return User.findUserByCredentials(req.body.email, req.body.password)
@@ -65,41 +97,37 @@ const login = (req, res) => {
       res.status(200).send({ token });
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      const UnauthorizedError = new Err401Unauthorized(err.message);
+      next(UnauthorizedError);
     });
 };
 
-const getUsers = (req, res) => User.find({})
+const getUsers = (req, res, next) => User.find({})
   .then((users) => res.status(200).send(users))
-  .catch(() => res.status(500).send({ message: 'Запрашиваемый ресурс не найден' }));
-
-const getMe = (req, res) => User.findById(req.user._id)
-  .then((user) => {
-    if (!user) {
-      return res.status(404).send({ message: 'Нет пользователя с таким id' });
-    }
-    return res.status(200).send(user);
-  })
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Некорректный id' });
-    } else res.status(500).send({ message: 'Запрашиваемый ресурс не найден' });
+  .catch(() => {
+    const OtherError = new Err500('Запрашиваемый ресурс не найден');
+    next(OtherError);
   });
 
-const getProfileById = (req, res) => User.findById(req.params.id)
-  .then((user) => {
-    if (!user) {
-      return res.status(404).send({ message: 'Нет пользователя с таким id' });
-    }
-    return res.status(200).send(user);
-  })
-  .catch((err) => {
-    if (err.name === 'CastError') {
-      res.status(400).send({ message: 'Некорректный id' });
-    } else res.status(500).send({ message: 'Запрашиваемый ресурс не найден' });
-  });
+const getMe = (req, res, next) => {
+  User.findById(req.user._id)
+    .orFail(() => {
+      throw new Error('Not Found');
+    })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => handleGetUserErrors(err, res, next));
+};
 
-const updateProfile = (req, res) => {
+const getProfileById = (req, res, next) => {
+  User.findById(req.params.id)
+    .orFail(() => {
+      throw new Error('Not Found');
+    })
+    .then((user) => res.status(200).send(user))
+    .catch((err) => handleGetUserErrors(err, res, next));
+};
+
+const updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { name, about }, {
@@ -107,13 +135,13 @@ const updateProfile = (req, res) => {
     runValidators: true,
   })
     .orFail(() => {
-      throw new Error('NotFound');
+      throw new Error('Not Found');
     })
     .then((data) => res.status(200).send(data))
-    .catch((err) => handleUpdateErrors(err, res));
+    .catch((err) => handleUpdateErrors(err, res, next));
 };
 
-const updateProfileAvatar = (req, res) => {
+const updateProfileAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, {
@@ -121,10 +149,10 @@ const updateProfileAvatar = (req, res) => {
     runValidators: true,
   })
     .orFail(() => {
-      throw new Error('NotFound');
+      throw new Error('Not Found');
     })
     .then((data) => res.status(200).send(data))
-    .catch((err) => handleUpdateErrors(err, res));
+    .catch((err) => handleUpdateErrors(err, res, next));
 };
 
 module.exports = {

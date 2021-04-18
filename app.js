@@ -8,6 +8,7 @@ const usersControllers = require('./controllers/users.js');
 const usersRouter = require('./routes/users.js');
 const cardsRouter = require('./routes/cards.js');
 const auth = require('./middlewares/auth');
+const errorHandler = require('./middlewares/errorHandler.js');
 const { createUserValidator, loginValidator } = require('./middlewares/validation.js');
 
 const app = express();
@@ -38,6 +39,7 @@ app.use((req, res) => {
 });
 
 app.use(errors());
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console

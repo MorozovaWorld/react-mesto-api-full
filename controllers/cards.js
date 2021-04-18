@@ -1,4 +1,8 @@
 const Card = require('../models/card');
+// const BadRequestErr = require('../errors/BadRequestErr'); // errorStatus == 400;
+// const UnauthorizedErr = require('../errors/UnauthorizedErr'); // errorStatus == 401;
+// const NotFoundErr = require('../errors/NotFoundErr'); // errorStatus == 404;
+// const ForbiddenErr = require('../errors/ForbiddenErr'); // errorStatus == 403;
 
 const handleIdErrors = (err, res) => {
   if (err.name === 'CastError') {
