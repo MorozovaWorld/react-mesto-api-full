@@ -6,7 +6,6 @@ const User = require('../models/user');
 
 const Err400BadRequest = require('../errors/Err400BadRequest');
 const Err401Unauthorized = require('../errors/Err401Unauthorized');
-// const Err403Forbidden = require('../errors/Err403Forbidden');
 const Err404NotFound = require('../errors/Err404NotFound');
 const Err409Conflict = require('../errors/Err409Conflict');
 const Err500 = require('../errors/Err500');

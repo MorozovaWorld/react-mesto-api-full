@@ -10,6 +10,7 @@ const cardsRouter = require('./routes/cards.js');
 const auth = require('./middlewares/auth');
 const errorHandler = require('./middlewares/errorHandler.js');
 const { createUserValidator, loginValidator } = require('./middlewares/validation.js');
+const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 
 const app = express();
 
@@ -25,6 +26,7 @@ mongoose.connect('mongodb://localhost:27017/mestonew', {
 
 app.use(helmet());
 app.use(express.json());
+app.use(requestLogger);
 
 app.post('/signup', createUserValidator, usersControllers.createUser);
 app.post('/signin', loginValidator, usersControllers.login);
@@ -38,6 +40,7 @@ app.use((req, res) => {
   res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
 });
 
+app.use(errorLogger);
 app.use(errors());
 app.use(errorHandler);
 
