@@ -1,0 +1,6 @@
+@media screen and (max-width: 600px) {
+  .popup__close_position_add-picture-popup {
+    top: -27px;
+    right: -27px;
+  }
+}

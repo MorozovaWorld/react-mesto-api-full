@@ -1,0 +1,12 @@
+.card__caption-text {
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 1.2;
+  padding: 0 20px 0 0;
+  margin: 0;
+  box-sizing: border-box;
+  min-width: 100px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}

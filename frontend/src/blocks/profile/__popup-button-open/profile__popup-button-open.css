@@ -1,0 +1,17 @@
+.profile__popup-button-open {
+  min-width: 24px;
+  min-height: 24px;
+  border: 1px solid #fff;
+  box-sizing: border-box;
+  background-color: #000;
+  margin: 0;
+  padding: 0;
+  object-position: center;
+}
+
+@media screen and (max-width: 480px) {
+  .profile__popup-button-open {
+    min-width: 18px;
+    min-height: 18px;
+  }
+}

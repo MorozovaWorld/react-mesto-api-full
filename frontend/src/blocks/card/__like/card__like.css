@@ -1,0 +1,7 @@
+.card__like {
+  padding: 0;
+  border: none;
+  outline: none;
+  background-color: #fff;
+  position: relative;
+}

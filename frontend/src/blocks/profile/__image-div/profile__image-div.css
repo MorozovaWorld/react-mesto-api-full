@@ -1,0 +1,7 @@
+.profile__image-div {
+  position: relative;
+}
+
+.profile__image-div:hover .profile__image-edit-btn {
+  display: flex;
+};

@@ -1,0 +1,15 @@
+.card__caption {
+  margin: 20px auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #000;
+  width: calc(100% - 21px*2);
+}
+
+@media screen and (max-width: 320px) {
+  .card__caption {
+    margin-top: 25px;
+    margin-bottom: 25px;
+  }
+}

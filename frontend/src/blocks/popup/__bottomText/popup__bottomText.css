@@ -1,0 +1,10 @@
+.popup__bottomText {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 1.21;
+  text-align: center;
+  color: #FFF;
+  margin: 15px 0 0;
+}

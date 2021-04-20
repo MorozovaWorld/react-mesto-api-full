@@ -1,0 +1,10 @@
+.popup__input-container {
+  min-height: 70px;
+  width: 100%;
+  position: relative;
+}
+
+.popup__input-container:last-child {
+  min-height: 0;
+  margin-bottom: 48px;
+}

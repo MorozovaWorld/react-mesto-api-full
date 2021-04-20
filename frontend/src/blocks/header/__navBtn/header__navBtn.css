@@ -1,0 +1,13 @@
+.header__navBtn {
+  padding: 0;
+  border: 0;
+  margin-left: 24px;
+  background-color: transparent;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 1.22;
+  color: #A9A9A9;
+  text-decoration: none;
+}

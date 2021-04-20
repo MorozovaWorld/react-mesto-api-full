@@ -1,0 +1,5 @@
+@media screen and (max-width: 600px) {
+  .popup__title_action_add-picture {
+    margin-bottom: 36px;
+  }
+}

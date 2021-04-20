@@ -1,0 +1,8 @@
+@media screen and (max-width: 600px) {
+  .popup__container_action_add-picture {
+    width: calc(100% - 2*40px);
+    padding: 30px 20px;
+    box-sizing: border-box;
+    min-width: 240px;
+  }
+}

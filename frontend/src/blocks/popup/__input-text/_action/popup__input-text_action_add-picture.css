@@ -1,0 +1,9 @@
+
+@media screen and (max-width: 320px) {
+  .popup__input-text_action_add-picture {
+    font-size: 12px;
+    line-height: 1.25;
+    padding-bottom: 12px;
+    margin-bottom: 20px;
+  }
+}

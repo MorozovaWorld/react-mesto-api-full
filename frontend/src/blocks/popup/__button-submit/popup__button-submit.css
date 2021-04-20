@@ -1,0 +1,26 @@
+.popup__button-submit {
+  background-color: #000;
+  border: 0;
+  border-radius: 2px;
+  width: 100%;
+  min-height: 50px;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 1.22;
+  text-align: center;
+  color: #fff;
+  padding: 0;
+  opacity: 1;
+  transition: linear .3s;
+}
+
+@media screen and (max-width: 320px) {
+  .popup__button-submit {
+    font-size: 14px;
+    min-height: 46px;
+  }
+}
+
+.popup__button-submit:hover {
+  opacity: .8;
+}

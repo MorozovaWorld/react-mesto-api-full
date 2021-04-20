@@ -1,0 +1,7 @@
+.profile__title-edit {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+

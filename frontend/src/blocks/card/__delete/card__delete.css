@@ -1,0 +1,9 @@
+.card__delete {
+  position: absolute;
+  top: 18px;
+  right: 15px;
+  background-color: transparent;
+  padding: 0;
+  border: none;
+  visibility: hidden;
+}

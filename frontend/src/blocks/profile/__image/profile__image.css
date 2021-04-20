@@ -1,0 +1,7 @@
+.profile__image {
+  border-radius: 60px;
+  max-width: 120px;
+  min-height: 120px;
+  object-fit: cover;
+}
+
