@@ -1,6 +1,5 @@
 const Card = require('../models/card');
 const Err400BadRequest = require('../errors/Err400BadRequest');
-const Err403Forbidden = require('../errors/Err403Forbidden');
 const Err404NotFound = require('../errors/Err404NotFound');
 const Err500 = require('../errors/Err500');
 
@@ -11,9 +10,6 @@ const handleIdErrors = (err, res, next) => {
   } else if (err.message === 'NotFound') {
     const notFoundError = new Err404NotFound('Карточка не найдена');
     next(notFoundError);
-  } else if (err.message === 'Forbidden') {
-    const forbiddenError = new Err403Forbidden('Нет прав доступа к удалению карточки');
-    next(forbiddenError);
   } else {
     const OtherError = new Err500('Внутренняя ошибка сервера');
     next(OtherError);
@@ -42,17 +38,11 @@ const createCard = (req, res, next) => {
 };
 
 const deleteCard = (req, res, next) => {
-  Card.findById(req.params.cardId)
+  Card.findByIdAndRemove(req.params.cardId)
     .orFail(() => {
       throw new Error('NotFound');
     })
-    .then((card) => {
-      if (card.owner._id !== req.user._id) {
-        throw new Error('Forbidden');
-      }
-      card.remove();
-      res.status(200).send(card);
-    })
+    .then((card) => res.status(200).send(card))
     .catch((err) => handleIdErrors(err, res, next));
 };
 

@@ -10,7 +10,7 @@ const createUserValidator = celebrate({
     password: Joi
       .string()
       .required()
-      .min(8),
+      .min(4),
   }),
 });
 
@@ -23,7 +23,7 @@ const loginValidator = celebrate({
     password: Joi
       .string()
       .required()
-      .min(8),
+      .min(4),
   }),
 });
 
@@ -31,7 +31,6 @@ const getProfileByIdValidator = celebrate({
   params: Joi.object().keys({
     id: Joi
       .string()
-      .alphanum()
       .length(24),
   }),
 });
@@ -41,13 +40,11 @@ const updateProfileValidator = celebrate({
     name: Joi
       .string()
       .required()
-      .alphanum()
       .min(2)
       .max(30),
     about: Joi
       .string()
       .required()
-      .alphanum()
       .min(2)
       .max(30),
   }),
@@ -82,16 +79,14 @@ const deleteCardValidator = celebrate({
   params: Joi.object().keys({
     cardId: Joi
       .string()
-      .alphanum()
       .length(24),
   }),
 });
 
 const likeOrDislikeCardValidator = celebrate({
   params: Joi.object().keys({
-    id: Joi
+    cardId: Joi
       .string()
-      .alphanum()
       .length(24),
   }),
 });

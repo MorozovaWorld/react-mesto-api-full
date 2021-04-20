@@ -45,7 +45,7 @@ const handleUpdateErrors = (err, res, next) => {
   }
 };
 
-const emailAndPasswordValidation = (res, email, password) => {
+const emailAndPasswordValidation = (email, password) => {
   if (!email || !password) {
     throw new Err400BadRequest('Не передан емейл или пароль');
   }
@@ -83,9 +83,10 @@ const createUser = (req, res, next) => {
 };
 
 const login = (req, res, next) => {
-  emailAndPasswordValidation(res, req.body.email, req.body.password);
+  const { email, password } = req.body;
+  emailAndPasswordValidation(email, password);
 
-  return User.findUserByCredentials(req.body.email, req.body.password)
+  return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign(
         { _id: user._id },
