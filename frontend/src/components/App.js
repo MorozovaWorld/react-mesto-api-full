@@ -44,11 +44,6 @@ function App() {
   const [cardToDelete, setCardToDelete] = useState(null);
 
   useEffect(() => {
-    tokenCheck();
-    }, []
-  );
-
-  useEffect(() => {
     if (loggedIn) {
       history.push('/');
     }
@@ -71,13 +66,14 @@ function App() {
 
     setInfoPopupOpen(true);
   }
-
+  
   const onLogin = (email, password) => {
     api.authorize(email, password)
       .then((res) => {
         if (res.token) {
           localStorage.setItem('jwt', res.token);
           setLoggedIn(true);
+          tokenCheck();
         }
         if (res.status === 401) {
           onLoginAndRegisterFail();
@@ -99,31 +95,42 @@ function App() {
   const onRegister = (email, password) => {
     api.register(email, password)
       .then((res) => {
-        if (res.status !== 400) {
-          onRegisterSucceed();
-          history.push('/singin')
-        } else {
+        if (res.status === 400) {
           onLoginAndRegisterFail();
           throw new Error('некорректно заполнено одно из полей');
         }
+        if (res.status === 409) {
+          onLoginAndRegisterFail();
+          throw new Error('Пользователь с таким емейлом уже зарегистрирован');
+        }
+        onRegisterSucceed();
+        history.push('/singin')
       })
       .catch(err => console.log(err));
   };
 
   const tokenCheck = () => {
     const jwt = localStorage.getItem('jwt');
-
     if (jwt){
-      api.getContent(jwt)
-        .then((res) => {
-          if (res) {
-            setUserEmail(res.email);
-            setLoggedIn(true);
-          }
-        })
-        .catch(err => console.log(err));
+      Promise.all([
+        api.getContent(jwt),
+        api.getInitialCards(jwt),
+        api.getUserInfo(jwt)
+      ])
+      .then(([userContent, initialCardsData, userData]) => {
+        setUserEmail(userContent.email);
+        setLoggedIn(true);
+        setCards(initialCardsData);
+        setCurrentUser(userData);
+      })
+      .catch((err) => console.log(err))
     }
   }
+
+  useEffect(() => {
+    tokenCheck();
+    }, []
+  );
 
   const onEditProfile = () => {
     setEditProfilePopupOpen(true);
@@ -141,19 +148,6 @@ function App() {
     setConfirmCardDeletePopupOpen(true);
     setCardToDelete({...card})
   }
-
-  useEffect(() => {
-      Promise.all([
-        api.getInitialCards(),
-        api.getUserInfo()
-      ])
-      .then(([initialCardsData, userData]) => {
-        setCards(initialCardsData);
-        setCurrentUser(userData);
-      })
-      .catch((err) => console.log(err))
-    }, []
-  );
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i === currentUser._id);

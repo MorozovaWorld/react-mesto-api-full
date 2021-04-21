@@ -52,12 +52,12 @@ class Api {
     return res.ok ? res.json() : Promise.reject(new Error(`Ошибка: ${res.status}, ${res.statusText}`));
   }
 
-  getUserInfo() {
+  getUserInfo(token) {
     return fetch(`${this._url}${this._usersUrl}${this._userUrl}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this._token}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
     .then(this._resProcess);
@@ -92,12 +92,12 @@ class Api {
     .then(this._resProcess);
   }
 
-  getInitialCards() {
+  getInitialCards(token) {
     return fetch(`${this._url}${this._cardsUrl}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${this._token}`,
+        'Authorization': `Bearer ${token}`,
       },
     })
     .then(this._resProcess);
