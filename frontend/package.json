@@ -1,6 +1,7 @@
 {
-  "homepage": "https://morozovaworld.github.io/mesto-react/",
+  "homepage": "./",
   "name": "mesto-react",
+  "author": "Ekaterina Morozova",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
