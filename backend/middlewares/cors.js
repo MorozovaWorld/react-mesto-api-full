@@ -1,7 +1,7 @@
 const options = {
   origin: [
     'http://localhost:3000',
-    'https://ваш домен с документа',
+    'https://mesto-morozova.students.nomoredomains.icu',
     'https://morozovaworld.github.io',
   ],
   methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE'],
