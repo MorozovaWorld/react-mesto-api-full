@@ -2,5 +2,5 @@
 Репозиторий для приложения проекта `Mesto`, включающий фронтенд и бэкенд части приложения со следующими возможностями: авторизации и регистрации пользователей, операции с карточками и пользователями. Бэкенд расположен в директории `backend/`, а фронтенд - в `frontend/`. 
   
 Ссылку на сайт, размещенный на Яндекс.Облаке: 
--  [фронтенд тут](http://mesto-morozova.students.nomoredomains.icu/); 
--  [бэкеенд тут](http://api.mesto-morozova.nomoredomains.icu); 
+-  [фронтенд тут](https://mesto-morozova.students.nomoredomains.icu/); 
+-  [бэкеенд тут](https://api.mesto-morozova.nomoredomains.icu); 
