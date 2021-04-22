@@ -30,9 +30,9 @@ mongoose.connect('mongodb://localhost:27017/mestonew', {
 
 app.use('*', cors(options));
 app.use(helmet());
-app.use(rateLimiter);
 app.use(express.json());
 app.use(requestLogger);
+app.use(rateLimiter);
 
 app.get('/crash-test', () => {
   setTimeout(() => {
