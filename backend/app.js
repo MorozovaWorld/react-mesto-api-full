@@ -13,6 +13,8 @@ const errorHandler = require('./middlewares/errorHandler.js');
 const { createUserValidator, loginValidator } = require('./middlewares/validation.js');
 const { requestLogger, errorLogger } = require('./middlewares/logger.js');
 const { options } = require('./middlewares/cors.js');
+const { rateLimiter } = require('./middlewares/rateLimiter.js');
+const Err404NotFound = require('./errors/Err404NotFound');
 
 const app = express();
 
@@ -28,6 +30,7 @@ mongoose.connect('mongodb://localhost:27017/mestonew', {
 
 app.use('*', cors(options));
 app.use(helmet());
+app.use(rateLimiter);
 app.use(express.json());
 app.use(requestLogger);
 
@@ -45,8 +48,9 @@ app.use(auth);
 app.use('/', usersRouter);
 app.use('/', cardsRouter);
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Запрашиваемый ресурс не найден' });
+// eslint-disable-next-line no-unused-vars
+app.use((req, res, next) => {
+  throw new Err404NotFound('Запрашиваемый ресурс не найден');
 });
 
 app.use(errorLogger);
