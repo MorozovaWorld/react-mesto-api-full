@@ -49,9 +49,10 @@ const deleteCard = (req, res, next) => {
     .then((card) => {
       if (card.owner.toString() !== req.user._id.toString()) {
         throw new Error('Forbidden');
+      } else {
+        card.remove();
+        return res.status(200).send(card);
       }
-      card.remove();
-      return res.status(200).send(card);
     })
     .catch((err) => handleIdErrors(err, res, next));
 };
